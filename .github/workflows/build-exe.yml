@@ -1,1 +1,31 @@
-
+name: Build Windows exe
+on:
+  workflow_dispatch:
+  push:
+    tags: ['v*']
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+          cache: maven
+      - name: Build fat jar
+        run: mvn -B clean package
+      - name: Package with jpackage
+        shell: pwsh
+        run: |
+          New-Item -ItemType Directory dist/input | Out-Null
+          Copy-Item target/aieditor-1.0-shaded.jar dist/input/
+          jpackage --type app-image --name "AI Editor" --app-version 1.0 --input dist/input --main-jar aieditor-1.0-shaded.jar --main-class com.example.Launcher --dest dist/out
+          jpackage --type exe --name "AI Editor" --app-version 1.0 --input dist/input --main-jar aieditor-1.0-shaded.jar --main-class com.example.Launcher --win-shortcut --win-menu --win-dir-chooser --dest dist/out
+          Compress-Archive -Path "dist/out/AI Editor" -DestinationPath "dist/AI-Editor-portable.zip"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: AI-Editor-windows
+          path: |
+            dist/out/*.exe
+            dist/AI-Editor-portable.zip
