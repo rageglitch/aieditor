@@ -1,0 +1,23 @@
+.canvas,
+.canvas > .viewport {
+    -fx-background-color: -color-bg-inset;
+    -fx-background: -color-bg-inset;
+    -fx-border-width: 0;
+}
+
+.sidebar {
+    -fx-background-color: -color-bg-default;
+    -fx-border-color: -color-border-default;
+    -fx-border-width: 0 1 0 0;
+}
+
+.sidebar > .viewport {
+    -fx-background-color: -color-bg-default;
+}
+
+.status-bar {
+    -fx-padding: 8 16;
+    -fx-background-color: -color-bg-subtle;
+    -fx-border-color: -color-border-default;
+    -fx-border-width: 1 0 0 0;
+}
